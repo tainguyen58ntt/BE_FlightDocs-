@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\FlightDocs.Serivce.AuthApi.props" />
+</Project>

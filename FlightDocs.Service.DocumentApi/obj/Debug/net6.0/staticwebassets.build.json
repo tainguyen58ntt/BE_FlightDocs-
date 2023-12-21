@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "iaTGn0dTlyNrQFCVvqYL2HPwTMCnxFZXkK37QkXtSY4=",
+  "Source": "FlightDocs.Service.DocumentApi",
+  "BasePath": "_content/FlightDocs.Service.DocumentApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

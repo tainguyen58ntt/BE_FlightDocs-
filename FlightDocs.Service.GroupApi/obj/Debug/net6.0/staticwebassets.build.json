@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "H4lHMIEotUdTKN2Qo21tEM0c299TPGzFrLk9scuhoXc=",
+  "Source": "FlightDocs.Service.GroupApi",
+  "BasePath": "_content/FlightDocs.Service.GroupApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

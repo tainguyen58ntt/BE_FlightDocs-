@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\FlightDocs.Service.GroupApi.props" />
+</Project>

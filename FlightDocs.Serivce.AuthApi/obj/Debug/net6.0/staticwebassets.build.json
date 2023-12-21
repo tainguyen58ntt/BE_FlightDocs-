@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "uvEWAuBkKkrqGzAtLDlonqNyG9aHIzn4jaZbOVsJwiw=",
+  "Source": "FlightDocs.Serivce.AuthApi",
+  "BasePath": "_content/FlightDocs.Serivce.AuthApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
