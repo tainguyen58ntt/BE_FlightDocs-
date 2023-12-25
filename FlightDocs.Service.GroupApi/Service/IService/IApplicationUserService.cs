@@ -4,6 +4,7 @@ namespace FlightDocs.Service.GroupApi.Service.IService
 {
     public interface IApplicationUserService
     {
-        Task<IEnumerable<ApplicationUserDto>> GetUserNameById(string id);
+        Task<ApplicationUserDto?> GetUserById(string id);
+        Task<ApplicationUserDto?> GetUserByEmail(string email);
     }
 }

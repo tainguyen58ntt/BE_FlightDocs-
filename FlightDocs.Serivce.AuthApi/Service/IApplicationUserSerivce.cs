@@ -23,5 +23,17 @@ namespace FlightDocs.Serivce.AuthApi.Service
             var users = await _db.ApplicationUsers.ToListAsync();
             return _mapper.Map<List<UserDto>>(users);
         }
+
+        public async Task<UserDto?> GetUserByEmailAsync(string email)
+        {
+            var users = await _db.ApplicationUsers.Where(u => u.Email == email).FirstOrDefaultAsync();
+            return _mapper.Map<UserDto>(users);
+        }
+
+        public async Task<UserDto?> GetUserByIdAsync(string id)
+        {
+            var users = await _db.ApplicationUsers.Where(u => u.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<UserDto>(users);
+        }
     }
 }

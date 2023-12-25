@@ -8,9 +8,11 @@ namespace FlightDocs.Service.GroupApi.Service.IService
     public interface IGroupService
     {
         //Task<IEnumerable<GroupResponseDto>> GetGroupAsync();
+        Task<GroupResponseDto?> GetGroupByIdAsync(int id);
         Task<Pagination<GroupResponseDto>> GetPaginationAsync(int pageIndex, int pageSize);
 
         Task<bool> CreatAsync(GroupRequestDto groupRequestDto);
+        Task<bool> AssingMemeberToGroupAsync(int id,string email);
 
     }
 }

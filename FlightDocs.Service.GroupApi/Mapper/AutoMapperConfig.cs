@@ -11,7 +11,13 @@ namespace FlightDocs.Service.GroupApi.Mapper
         {
             CreateMap(typeof(Pagination<>), typeof(Pagination<>));
             //
-            CreateMap<GroupResponseDto, Group>().ReverseMap();
+            CreateMap<GroupResponseDto, Group>()
+        .ForMember(dest => dest.ApplicationUsers, opt => opt.MapFrom(src => src.ApplicationUserDtos))
+        .ReverseMap();
+            CreateMap<GroupRequestDto, Group>().ReverseMap();
+
+            //
+            CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
         }
 
     }
