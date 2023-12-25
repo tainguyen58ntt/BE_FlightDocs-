@@ -40,6 +40,17 @@ namespace FlightDocs.Service.GroupApi.Controllers
 
         }
 
+
+        [HttpGet("get-group-by-name")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetGroupByName([FromQuery] string name)
+        {
+        
+            var result = await _groupService.GetGroupByNameAsync(name);
+            return Ok(result);
+
+        }
+
         // create group
         [HttpPost]
         [Authorize(Roles = "ADMIN")]

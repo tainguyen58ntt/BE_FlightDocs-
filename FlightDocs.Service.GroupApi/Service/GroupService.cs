@@ -56,12 +56,20 @@ namespace FlightDocs.Service.GroupApi.Service
             return await _db.SaveChangesAsync() > 0;
         }
 
+     
+
         public async Task<GroupResponseDto?> GetGroupByIdAsync(int id)
         {
               var group = await _db.Groups.Where(g => g.Id == id).FirstOrDefaultAsync();
             return _mapper.Map<GroupResponseDto>(group);
             
 
+        }
+
+        public async Task<IEnumerable<GroupResponseDto>> GetGroupByNameAsync(string name)
+        {
+            var group = await _db.Groups.Where(g => g.Name.Contains(name)).ToListAsync();
+            return _mapper.Map<IEnumerable<GroupResponseDto>>(group);
         }
 
         public async Task<Pagination<GroupResponseDto>> GetPaginationAsync(int pageIndex, int pageSize)

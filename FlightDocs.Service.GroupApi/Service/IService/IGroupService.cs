@@ -11,6 +11,10 @@ namespace FlightDocs.Service.GroupApi.Service.IService
         Task<GroupResponseDto?> GetGroupByIdAsync(int id);
         Task<Pagination<GroupResponseDto>> GetPaginationAsync(int pageIndex, int pageSize);
 
+        //Task<Pagination<GroupResponseDto>> GetByNamePaginationAsync(int pageIndex, int pageSize, string name);
+
+        Task<IEnumerable<GroupResponseDto>> GetGroupByNameAsync(string name);
+
         Task<bool> CreatAsync(GroupRequestDto groupRequestDto);
         Task<bool> AssingMemeberToGroupAsync(int id,string email);
 
