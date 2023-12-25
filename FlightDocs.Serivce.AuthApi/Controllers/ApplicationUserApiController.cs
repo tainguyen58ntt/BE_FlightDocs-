@@ -1,4 +1,5 @@
 ﻿using FlightDocs.Serivce.AuthApi.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +38,9 @@ namespace FlightDocs.Serivce.AuthApi.Controllers
             if (user == null) return NotFound("Cannot find user with that email");
             return Ok(await _applicationUserSerivce.GetUserByEmailAsync(email));
         }
+
+   
+
 
 
     }

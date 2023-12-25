@@ -44,7 +44,11 @@ namespace FlightDocs.Serivce.AuthApi.Service
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
             var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == loginRequestDto.Email.ToLower());
-
+            if (user.LockoutEnabled && user.LockoutEnd > DateTime.UtcNow)
+            {
+                // You may want to provide a specific response for a locked-out user
+                return new LoginResponseDto() { User = null, Token = "", isLock = true };
+            }
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
             if (user == null || isValid == false)

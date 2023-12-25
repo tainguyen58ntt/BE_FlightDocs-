@@ -64,10 +64,17 @@ namespace FlightDocs.Serivce.AuthApi.Controllers
             var loginResponse = await _authService.Login(model);
             if (loginResponse.User == null)
             {
+                if(loginResponse.isLock == true)
+                {
+                    _response.Success = false;
+                    _response.Message = "User is locked out";
+                    return BadRequest(_response);
+                }
                 _response.Success = false;
                 _response.Message = "Username or password is incorrect";
                 return BadRequest(_response);
             }
+
             _response.Result = loginResponse;
             return Ok(_response);
 
