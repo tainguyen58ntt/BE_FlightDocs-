@@ -2,9 +2,11 @@
 using FlightDocs.Serivce.AuthApi.Data;
 using FlightDocs.Serivce.AuthApi.Models;
 using FlightDocs.Serivce.AuthApi.Models.Dto;
+using FlightDocs.Serivce.AuthApi.Models.Dto.Email;
 using FlightDocs.Serivce.AuthApi.Service.IService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace FlightDocs.Serivce.AuthApi.Service
 {
@@ -13,6 +15,7 @@ namespace FlightDocs.Serivce.AuthApi.Service
         private readonly AppDbContext _db;
         private IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
 
 
         public ApplicationUserSerivce(AppDbContext db, IMapper mapper, UserManager<ApplicationUser> userManager)
@@ -67,5 +70,7 @@ namespace FlightDocs.Serivce.AuthApi.Service
 
             return false;
         }
+
+       
     }
 }

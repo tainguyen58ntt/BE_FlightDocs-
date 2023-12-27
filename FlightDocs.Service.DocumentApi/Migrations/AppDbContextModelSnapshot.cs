@@ -37,6 +37,9 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DocumentTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FlightId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -60,6 +63,8 @@ namespace FlightDocs.Service.DocumentApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DocumentTypeId");
+
                     b.ToTable("Documents");
                 });
 
@@ -71,7 +76,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("DocumentId")
+                    b.Property<int>("DocumentTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("GroupId")
@@ -83,11 +88,35 @@ namespace FlightDocs.Service.DocumentApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
+                    b.HasIndex("DocumentTypeId");
 
                     b.HasIndex("GroupId");
 
                     b.ToTable("DocumentPermissions");
+                });
+
+            modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.DocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreateBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentType");
                 });
 
             modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.Group", b =>
@@ -114,11 +143,22 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                     b.ToTable("Groups");
                 });
 
+            modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.Document", b =>
+                {
+                    b.HasOne("FlightDocs.Service.DocumentApi.Models.DocumentType", "DocumentType")
+                        .WithMany("Documents")
+                        .HasForeignKey("DocumentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DocumentType");
+                });
+
             modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.DocumentPermissions", b =>
                 {
-                    b.HasOne("FlightDocs.Service.DocumentApi.Models.Document", "Document")
+                    b.HasOne("FlightDocs.Service.DocumentApi.Models.DocumentType", "DocumentType")
                         .WithMany()
-                        .HasForeignKey("DocumentId")
+                        .HasForeignKey("DocumentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -128,9 +168,14 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Document");
+                    b.Navigation("DocumentType");
 
                     b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.DocumentType", b =>
+                {
+                    b.Navigation("Documents");
                 });
 #pragma warning restore 612, 618
         }

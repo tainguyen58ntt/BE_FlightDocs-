@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FlightDocs.Serivce.AuthApi.Models.Dto;
 using FlightDocs.Service.AuthApi.Mapper;
+using FlightDocs.Serivce.AuthApi.Models.Dto.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFramework
 //
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+//Add Email Configs
+var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
+builder.Services.AddScoped<IEmailService, EmailService>();
 //
 builder.Services.AddScoped<IApplicationUserSerivce, ApplicationUserSerivce>();
 //// Validator
@@ -32,6 +37,7 @@ builder.Services.AddScoped<IUserValidator, UserValidator>();
 builder.Services.AddScoped<RegistrationRequestRule>();
 //
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
