@@ -28,6 +28,13 @@ namespace FlightDocs.Service.GroupApi.Controllers
         
         }
 
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGroupById(int id)
+        {
+            return Ok(await _groupService.GetGroupByIdAsync(id));
+        }
+
         // list all group 
         [HttpGet]
         //[Authorize(Roles = "ADMIN")]
