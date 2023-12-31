@@ -1,8 +1,7 @@
-﻿namespace FlightDocs.Service.DocumentApi.Models
+﻿namespace FlightDocs.Service.DocumentApi.Models.Dto
 {
-    public class Document
+    public class DocumentResponseDto
     {
-
         public int Id { get; set; }
         public string FileName { get; set; }
         public string FileType { get; set; }
@@ -14,12 +13,6 @@
         public DateTime? UpdateDate { get; set; }
         public string? UpdateBy { get; set; }
 
-        public int DocumentTypeId { get; set; }
-       
 
-        public DocumentType DocumentType { get; set; }
-
-      
     }
-
 }

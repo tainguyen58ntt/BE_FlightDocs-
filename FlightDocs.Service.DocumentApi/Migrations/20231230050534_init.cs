@@ -16,6 +16,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -28,8 +29,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                 name: "Groups",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -45,8 +45,9 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     FlightId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastVersion = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),

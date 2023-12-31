@@ -28,6 +28,12 @@ namespace FlightDocs.Service.FlightAPI.Service
             return _mapper.Map<List<FlightResponseDto>>(flights);
         }
 
+        public async Task<FlightResponseDto?> GetFlightByIdAsync(string id)
+        {
+            var flight = await _db.Fligh.Where(f => f.FlightId == id).FirstOrDefaultAsync();
+            return _mapper.Map<FlightResponseDto>(flight);
+        }
+
         public async Task<Pagination<FlightResponseDto>> GetPaginationAsync(int pageIndex, int pageSize)
         {
             //var result = await _unitOfWork.ProductRepository.GetPaginationAsync(pageIndex, pageSize);

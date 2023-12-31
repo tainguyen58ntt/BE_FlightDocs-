@@ -40,20 +40,24 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                     b.Property<int>("DocumentTypeId")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("FileData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FlightId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("LastVersion")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdateBy")
                         .HasColumnType("nvarchar(max)");
@@ -126,10 +130,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
             modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.Group", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("CreateBy")
                         .IsRequired()

@@ -15,11 +15,14 @@ namespace FlightDocs.Service.DocumentApi.Mapper
 
             //
             CreateMap<DocumentTypeRequest, DocumentType>().ReverseMap();
+            //
+            CreateMap<DocumentResponseDto, Document>().ReverseMap();
 
             //
 
 
             CreateMap<GroupResponseDto, Group>().ReverseMap();
+           
         }
 
     }

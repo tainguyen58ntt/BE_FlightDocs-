@@ -21,6 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(
 //
 builder.Services.AddHttpClient("ApplicationUser", u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:AuthApi"]));
 builder.Services.AddHttpClient("Group", u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:GroupApi"]));
+builder.Services.AddHttpClient("Flight", u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:FlightApi"]));
 builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
@@ -59,6 +60,9 @@ builder.Services.AddScoped<ITimeService, TimeService>();
 //
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+
+builder.Services.AddScoped<IFlightService, FlightSerivice>();
 
 //
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);

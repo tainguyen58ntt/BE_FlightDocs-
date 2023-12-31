@@ -22,6 +22,13 @@ namespace FlightDocs.Service.FlightAPI.Controllers
 
         }
 
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFlightById(string id)
+        {
+            return Ok(await _flightService.GetFlightByIdAsync(id));
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetPageAsync([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
         {
