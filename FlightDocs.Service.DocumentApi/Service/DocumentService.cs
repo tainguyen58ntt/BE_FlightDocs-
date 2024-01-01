@@ -31,5 +31,11 @@ namespace FlightDocs.Service.DocumentApi.Service
             return _mapper.Map<List<DocumentResponseDto>>(document);
             //_mapper.Map<List<ProductViewModel>>(result);
         }
+
+        public async Task<DocumentResponseDto?> GetDocumentByIdAsync(int id)
+        {
+            var document = await _db.Documents.Where(d => d.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<DocumentResponseDto>(document);
+        }
     }
 }

@@ -47,6 +47,27 @@ namespace FlightDocs.Service.DocumentApi.Controllers
 
         }
 
+        [HttpGet("{documentId}/download")]
+        public async Task<IActionResult> DownloadDocumentId(int documentId)
+        {
+            var documentResponseDto = await _documentService.GetDocumentByIdAsync(documentId);
+            if (documentResponseDto == null)
+            {
+                return BadRequest("Cannot find that document");
+            }
+
+            var fileContent = documentResponseDto.FileData;
+
+            if (fileContent == null || fileContent.Length == 0)
+            {
+                return NotFound("File content not found");
+            }
+
+            return File(fileContent, documentResponseDto.FileType, documentResponseDto.FileName);
+
+
+        }
+
 
         //[HttpGet("Test/Download")]
         //public async Task<IActionResult> GetById(int id)
