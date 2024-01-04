@@ -5,6 +5,7 @@ using FlightDocs.Service.DocumentApi.Models.Dto;
 using FlightDocs.Service.DocumentApi.Pagination;
 using FlightDocs.Service.DocumentApi.Service.IService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.FileIO;
 using System.Net.Security;
 
 namespace FlightDocs.Service.DocumentApi.Service
@@ -106,6 +107,44 @@ namespace FlightDocs.Service.DocumentApi.Service
             //return result;
 
             return _mapper.Map<Pagination<DocumentResponseAllDto>>(result);
+        }
+
+        public async Task<bool> UpdateDocumentByDocumentIdForFlight(string flighId, DocumentUploadModel documentUploadModel, int documentId)
+        {
+            string currentUserId = _claimService.GetCurrentUserId();
+            if (currentUserId == null) return false;
+            var user = await _applicationUserService.GetUserById(currentUserId);
+
+
+            var d = await _db.Documents.Where(d => d.Id == documentId).FirstOrDefaultAsync();
+            if (d == null) return false;
+            d.FileName = documentUploadModel.File.FileName;
+            d.FileType = documentUploadModel.File.ContentType;
+            d.LastVersion = d.LastVersion + 0.1M;
+            d.UpdateBy = user.Email;
+            d.UpdateDate = _timeService.GetCurrentTimeInVietnam();
+            ////test
+            //var document = new Document
+            //{
+            //    FileName = documentUploadModel.File.FileName,
+            //    FileType = documentUploadModel.File.ContentType,
+            //    // Other document properties
+            //    FlightId = flighId,
+            //    CreateBy = user.Name,
+            //    DocumentTypeId = documentTypeId,
+            //    CreateDate = _timeService.GetCurrentTimeInVietnam()
+
+            //};
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await documentUploadModel.File.CopyToAsync(memoryStream);
+                d.FileData = memoryStream.ToArray();
+            }
+             _db.Set<Document>().Update(d);
+            //await _db.SaveChangesAsync(); // Save changes to get the DocumentType.Id
+
+            return await _db.SaveChangesAsync() > 0;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using FlightDocs.Service.GroupApi.Models.Dto;
+﻿using FlightDocs.Serivce.GroupApi.Data;
+using FlightDocs.Service.GroupApi.Models.Dto;
 using FlightDocs.Service.GroupApi.Service.IService;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 
@@ -7,12 +9,26 @@ namespace FlightDocs.Service.GroupApi.Service
 {
     public class ApplicationUserService : IApplicationUserService
     {
-        private readonly IHttpClientFactory _httpClientFactory; 
-        public ApplicationUserService(IHttpClientFactory httpClientFactory) { 
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly AppDbContext _db;
+        public ApplicationUserService(IHttpClientFactory httpClientFactory, AppDbContext db)
+        {
             _httpClientFactory = httpClientFactory;
+            _db = db;
         }
 
-        public async  Task<ApplicationUserDto?> GetUserByEmail(string email)
+        public async Task<int?> GetGroupIdByUserIdInMircoService(string id)
+        {
+            var user = await _db.ApplicationUsers.Where(a => a.Id == id).FirstOrDefaultAsync();
+            if (user != null)
+            {
+
+                return user.GroupId;
+            }
+            return null;
+        }
+
+        public async Task<ApplicationUserDto?> GetUserByEmail(string email)
         {
             var client = _httpClientFactory.CreateClient("ApplicationUser");
             var response = await client.GetAsync($"/api/ApplicationUserApi/get-by-email?email={email}").ConfigureAwait(false);

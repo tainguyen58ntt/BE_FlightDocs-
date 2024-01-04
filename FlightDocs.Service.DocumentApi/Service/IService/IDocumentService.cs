@@ -15,5 +15,6 @@ namespace FlightDocs.Service.DocumentApi.Service.IService
         Task<Pagination<DocumentResponseAllDto>> GetPaginationAsync(int pageIndex, int pageSize);
 
         Task<bool> CreateDocumentForFlight(string flighId, DocumentUploadModel documentUploadModel, int documentTypeId);
+        Task<bool> UpdateDocumentByDocumentIdForFlight(string flighId, DocumentUploadModel documentUploadModel, int documentId);
     }
 }

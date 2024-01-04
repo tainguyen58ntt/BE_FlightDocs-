@@ -14,5 +14,9 @@
         public string? UpdateBy { get; set; }
 
 
+
+        public int DocumentTypeId { get; set; }
+
+
     }
 }

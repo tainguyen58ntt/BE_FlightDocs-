@@ -23,16 +23,18 @@ namespace FlightDocs.Service.DocumentApi.Controllers
         private readonly IDocumentService _documentService;
         private readonly ITimeService _timeService;
         private readonly IDocumentTypeService _documentTypeService;
+        private readonly IDocumentPermissionService _documentPermissionService;
 
 
 
-        public DocumentApiController(IDocumentTypeService documentTypeService, IFlightService flightService, ITimeService timeService, IDocumentService documentService)
+        public DocumentApiController(IDocumentPermissionService documentPermissionService, IDocumentTypeService documentTypeService, IFlightService flightService, ITimeService timeService, IDocumentService documentService)
         {
 
             _flightService = flightService;
             _documentService = documentService;
             _timeService = timeService;
             _documentTypeService = documentTypeService;
+            _documentPermissionService = documentPermissionService;
            
 
         }
@@ -120,7 +122,7 @@ namespace FlightDocs.Service.DocumentApi.Controllers
 
 
 
-        [HttpPost("{flightId}")]
+        [HttpPost("Admin/{flightId}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> CreateDocumentForFlight(string flightId, [FromForm] DocumentUploadModel model, int documentTypeId)
         {
@@ -152,5 +154,60 @@ namespace FlightDocs.Service.DocumentApi.Controllers
 
             return Ok();
         }
+
+
+
+        [HttpPut("Pilot-Crew/{flightId}/{documentId}")]
+        [Authorize(Roles = "PILOT, CREW")]
+        public async Task<IActionResult> CreateDocumentForFlightByPilotOrCrew(string flightId, int documentId, [FromForm] DocumentUploadModel model)
+        {
+           
+
+
+
+            var flighExist = await _flightService.GetFlightByIdAsync(flightId);
+            if (flighExist == null)
+            {
+                return BadRequest("Cannot find that flight");
+            }
+            // valid date of flight 
+            if (flighExist.DepartureDateTime >= _timeService.GetCurrentTimeInVietnam())
+            {
+                return BadRequest("Cannot add document cause that flight is ending");
+            }
+
+            var documentExist = await _documentService.GetDocumentByIdAsync(documentId);
+            if (documentExist == null)
+            {
+                return BadRequest("Cannot find that document");
+            }
+
+            // 
+            //var documentType = await _documentTypeService.GetDocumentTypeByIdAsync(documentTypeId);
+            //if (documentType == null)
+            //{
+            //    return BadRequest("Cannot find that document type");
+            //}
+
+
+            // check permission: user can update document or not : user -> group -> document type
+            var checkPermission = await _documentPermissionService.CheckPermissionCanModifyDocx(documentExist.DocumentTypeId);
+
+            if (checkPermission == false) return Forbid();
+
+
+            ///
+            bool isUpdate = await _documentService.UpdateDocumentByDocumentIdForFlight(flightId, model, documentId);
+            if (isUpdate == false)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Update  Document Fail. Error server" });
+            }
+
+
+
+            return Ok();
+        }
+
+
     }
 }

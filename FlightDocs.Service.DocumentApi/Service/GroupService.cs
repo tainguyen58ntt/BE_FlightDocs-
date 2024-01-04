@@ -58,5 +58,47 @@ namespace FlightDocs.Service.DocumentApi.Service
             if (group == null) return null;
             return _mapper.Map<GroupResponseDto>(group);
         }
+
+        public async Task<int?> GetGroupIdByUserIdAsync(string userId)
+        {
+            var client = _httpClientFactory.CreateClient("Group");
+            var response = await client.GetAsync($"/api/GroupApi/get-group-id/{userId}").ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var apiContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                if (!string.IsNullOrEmpty(apiContent))
+                {
+                    try
+                    {
+                        var resp = JsonConvert.DeserializeObject<int>(apiContent);
+                        return resp;
+                    }
+                    catch (JsonException ex)
+                    {
+                        // Log the error or handle it appropriately
+                        Console.WriteLine($"Error deserializing JSON: {ex.Message}");
+                        // You might return null or handle the error in a different way based on your requirements
+                        return null;
+                    }
+                }
+                else
+                {
+                    // Log that the content is empty
+                    Console.WriteLine("Error: Empty content");
+                    // You might return null or handle the error in a different way based on your requirements
+                    return null;
+                }
+            }
+            else
+            {
+                // Log the non-successful status code
+                Console.WriteLine($"Error: {response.StatusCode}");
+                response.EnsureSuccessStatusCode(); // Throw an exception for non-successful status codes
+                return null; // or return an appropriate response
+            }
+        }
+
     }
 }

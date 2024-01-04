@@ -35,6 +35,14 @@ namespace FlightDocs.Service.GroupApi.Controllers
             return Ok(await _groupService.GetGroupByIdAsync(id));
         }
 
+
+
+        [HttpGet("get-group-id/{userId}")]
+        public async Task<IActionResult> GetIdGroupByUserId(string userId)
+        {
+            return Ok(await _applicationUserService.GetGroupIdByUserIdInMircoService(userId));
+        }
+
         // list all group 
         [HttpGet]
         //[Authorize(Roles = "ADMIN")]

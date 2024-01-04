@@ -42,6 +42,17 @@ namespace FlightDocs.Serivce.AuthApi.Controllers
             return Ok(await _applicationUserSerivce.GetUserByEmailAsync(email));
         }
 
+        //[HttpGet("get-groupid")]
+        //public async Task<IActionResult> GetGroupIdById(string id)
+        //{
+        //    var user = await _applicationUserSerivce.GetUserByIdAsync(id);
+        //    if (user == null) return NotFound("Cannot find user with that id");
+            
+        //    return Ok(await _applicationUserSerivce.GetUserByIdAsync(id).grou);
+        //}
+
+
+
 
         [HttpGet]
         [Route("reset-password")]
