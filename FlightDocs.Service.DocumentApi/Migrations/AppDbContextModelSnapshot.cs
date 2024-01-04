@@ -124,7 +124,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentType");
+                    b.ToTable("DocumentTypes");
                 });
 
             modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.Group", b =>

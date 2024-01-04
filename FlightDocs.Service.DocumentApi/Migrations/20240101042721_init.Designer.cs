@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightDocs.Service.DocumentApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231230050534_init")]
+    [Migration("20240101042721_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -126,7 +126,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentType");
+                    b.ToTable("DocumentTypes");
                 });
 
             modelBuilder.Entity("FlightDocs.Service.DocumentApi.Models.Group", b =>

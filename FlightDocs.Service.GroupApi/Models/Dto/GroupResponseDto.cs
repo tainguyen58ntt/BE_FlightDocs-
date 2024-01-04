@@ -9,7 +9,7 @@
 
         public string CreateBy { get; set; }
         public DateTime CreateDate { get; set; }
-      
+        public int Members { get; set; }
 
         public IEnumerable<ApplicationUserDto> ApplicationUserDtos { get; set; }
     }

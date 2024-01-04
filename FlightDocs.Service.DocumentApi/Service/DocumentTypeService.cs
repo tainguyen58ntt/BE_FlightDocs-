@@ -2,7 +2,9 @@
 using FlightDocs.Serivce.DocumentApi.Data;
 using FlightDocs.Service.DocumentApi.Models;
 using FlightDocs.Service.DocumentApi.Models.Dto;
+using FlightDocs.Service.DocumentApi.Pagination;
 using FlightDocs.Service.DocumentApi.Service.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlightDocs.Service.DocumentApi.Service
 {
@@ -11,14 +13,15 @@ namespace FlightDocs.Service.DocumentApi.Service
         private readonly AppDbContext _db;
         private IMapper _mapper;
         private IClaimService _claimService;
+        private IDocumentPermissionService _documentPermissionService;
         private ITimeService _timeService;
         private IApplicationUserService _applicationUserService;
-
         private IGroupService _groupService;
-        public DocumentTypeService(AppDbContext db, IMapper mapper, IClaimService claimService, ITimeService timeService, IGroupService groupService, IApplicationUserService applicationUserService)
+        public DocumentTypeService(IDocumentPermissionService documentPermissionService, AppDbContext db, IMapper mapper, IClaimService claimService, ITimeService timeService, IGroupService groupService, IApplicationUserService applicationUserService)
         {
             _db = db;
             _mapper = mapper;
+            _documentPermissionService = documentPermissionService;
             _claimService = claimService;
             _timeService = timeService;
             _applicationUserService = applicationUserService;
@@ -52,10 +55,23 @@ namespace FlightDocs.Service.DocumentApi.Service
                 {
 
                     // check group and insert matching data
-                    var x = await _groupService.GetGroupByIdAsync(group.Id);
+                    var x = await _groupService.GetGroupByIdAsync(group.GroupId);
                     Group g = _mapper.Map<Group>(x);
-                    await _db.Set<Group>().AddAsync(g);
-                    await _db.SaveChangesAsync();
+                    Group groupInMicroservice = null;
+                    // check if exist group in db document
+                    var checkExistGroup = await _groupService.GetGroupByIdInMicroserviceAsync(g.Id);
+                    if (checkExistGroup != null)
+                    {
+
+                        groupInMicroservice = _mapper.Map<Group>(checkExistGroup);
+                    }
+                    else
+                    {
+                        await _db.Set<Group>().AddAsync(g);
+                        await _db.SaveChangesAsync();
+                    }
+
+
 
                     // Create a new DocumentPermissions with the correct DocumentTypeId
                     DocumentPermissions d = new DocumentPermissions
@@ -76,7 +92,49 @@ namespace FlightDocs.Service.DocumentApi.Service
             return true;
         }
 
+        public async Task<DocumentTypeResponse?> GetDocumentTypeByIdAsync(int id)
+        {
+            var documentType = await _db.DocumentTypes.Where(d => d.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<DocumentTypeResponse>(documentType);
+        }
+
+        public async Task<Pagination<DocumentTypeResponse>> GetPaginationAsync(int pageIndex, int pageSize)
+        {
+
+            var totalCount = await _db.Set<DocumentType>().CountAsync();
+            var items = await _db.Set<DocumentType>()
+                .AsNoTracking()
 
 
+
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToListAsync();
+
+            //
+
+
+
+            var result = new Pagination<DocumentType>()
+            {
+                Items = items,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                TotalItemsCount = totalCount
+            };
+
+
+
+
+            var rs = _mapper.Map<Pagination<DocumentTypeResponse>>(result);
+            foreach (var item in rs.Items)
+            {
+                var count = await _documentPermissionService.CountGroupPermissionByDocumentTypeIdAsync(item.Id);
+                item.NumberOfGroupPermissions = count;
+            }
+            return rs;
+
+
+        }
     }
 }

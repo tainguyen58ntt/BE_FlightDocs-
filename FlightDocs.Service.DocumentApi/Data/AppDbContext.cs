@@ -15,7 +15,8 @@ namespace FlightDocs.Serivce.DocumentApi.Data
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentPermissions> DocumentPermissions { get; set; }
         public DbSet<Group> Groups { get; set; }
-        
+        public DbSet<DocumentType> DocumentTypes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using FlightDocs.Serivce.AuthApi.Models.Dto;
 using FlightDocs.Service.AuthApi.Mapper;
 using FlightDocs.Serivce.AuthApi.Models.Dto.Email;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using FlightDocs.Service.AuthApi.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,9 @@ builder.Services.AddScoped<RegistrationRequestRule>();
 //
 builder.Services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
 
+//builder.AddAppAuthetication();
+//builder.Services.AddAuthorization();
+//builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,7 +54,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+//app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

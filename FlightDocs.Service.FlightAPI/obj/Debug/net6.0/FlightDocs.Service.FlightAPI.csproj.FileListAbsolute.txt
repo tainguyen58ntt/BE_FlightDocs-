@@ -76,3 +76,4 @@ D:\Intern Alta\FlightDocs\FlightDocs\FlightDocs.Service.FlightAPI\obj\Debug\net6
 D:\Intern Alta\FlightDocs\FlightDocs\FlightDocs.Service.FlightAPI\obj\Debug\net6.0\FlightDocs.Service.FlightAPI.pdb
 D:\Intern Alta\FlightDocs\FlightDocs\FlightDocs.Service.FlightAPI\obj\Debug\net6.0\FlightDocs.Service.FlightAPI.genruntimeconfig.cache
 D:\Intern Alta\FlightDocs\FlightDocs\FlightDocs.Service.FlightAPI\obj\Debug\net6.0\ref\FlightDocs.Service.FlightAPI.dll
+D:\Intern Alta\FlightDocs\FlightDocs\FlightDocs.Service.FlightAPI\bin\Debug\net6.0\Newtonsoft.Json.dll

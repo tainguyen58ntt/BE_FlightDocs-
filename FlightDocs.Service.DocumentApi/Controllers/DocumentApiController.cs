@@ -1,13 +1,17 @@
-﻿using FlightDocs.Serivce.DocumentApi.Data;
+﻿using AutoMapper;
+using FlightDocs.Serivce.DocumentApi.Data;
 using FlightDocs.Service.DocumentApi.Models;
 using FlightDocs.Service.DocumentApi.Models.Dto;
 using FlightDocs.Service.DocumentApi.Service;
 using FlightDocs.Service.DocumentApi.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
+using System.Text;
 using System.Xml.Linq;
+using Document = FlightDocs.Service.DocumentApi.Models.Document;
 
 namespace FlightDocs.Service.DocumentApi.Controllers
 {
@@ -17,18 +21,35 @@ namespace FlightDocs.Service.DocumentApi.Controllers
     {
         private readonly IFlightService _flightService;
         private readonly IDocumentService _documentService;
+        private readonly ITimeService _timeService;
+        private readonly IDocumentTypeService _documentTypeService;
 
 
-        public DocumentApiController(IFlightService flightService, ITimeService timeService, IDocumentService documentService)
+
+        public DocumentApiController(IDocumentTypeService documentTypeService, IFlightService flightService, ITimeService timeService, IDocumentService documentService)
         {
 
             _flightService = flightService;
             _documentService = documentService;
+            _timeService = timeService;
+            _documentTypeService = documentTypeService;
+           
 
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetPageAsync([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
+        {
+            if (pageIndex < 0) return BadRequest("Page index cannot be negative");
+            if (pageSize <= 0) return BadRequest("Page size must greater than 0");
+            var result = await _documentService.GetPaginationAsync(pageIndex, pageSize);
+            return Ok(result);
 
         }
 
         [HttpGet("{flightId}")]
+        [Authorize(Roles = "ADMIN, CREW, PILOT")]
         public async Task<IActionResult> Get(string flightId)
         {
             var flight = await _flightService.GetFlightByIdAsync(flightId);
@@ -42,10 +63,33 @@ namespace FlightDocs.Service.DocumentApi.Controllers
             {
                 return NoContent();
             }
-            return Ok(await _documentService.GetDocumentByFlightIdAsync(flightId));   
+            return Ok(await _documentService.GetDocumentByFlightIdAsync(flightId));
 
 
         }
+
+
+        [HttpGet("{flightId}/updated-by-user")]
+        [Authorize(Roles = "ADMIN, CREW, PILOT")]
+        public async Task<IActionResult> GetDocumentWasUpdatedByUser(string flightId)
+        {
+            var flight = await _flightService.GetFlightByIdAsync(flightId);
+            if (flight == null)
+            {
+                return BadRequest("Cannot find that flight");
+            }
+
+            var documentByFlightId = await _documentService.GetDocumentWasUpdatedByUser(flightId);
+          
+            return Ok(await _documentService.GetDocumentWasUpdatedByUser(flightId));
+
+
+        }
+
+
+
+
+
 
         [HttpGet("{documentId}/download")]
         public async Task<IActionResult> DownloadDocumentId(int documentId)
@@ -69,63 +113,44 @@ namespace FlightDocs.Service.DocumentApi.Controllers
         }
 
 
-        //[HttpGet("Test/Download")]
-        //public async Task<IActionResult> GetById(int id)
-        //{
-        //    var d = await _dbContext.Documents.Where(d => d.Id == id).FirstOrDefaultAsync();
-        //    if (d != null)
-        //    {
-        //        var fileContent = d.FileData;
-        //        if (fileContent == null || fileContent.Length == 0)
-        //        {
-        //            return NotFound("File content not found");
-        //        }
-        //        return File(fileContent, d.FileType, d.FileName);
-        //    }
-        //    return NotFound("SDF");
-        //}
 
 
-        //[HttpPost("")]
-        ////[Authorize(Roles = "ADMIN")]
-        //public async Task<IActionResult> CreateDocumentForFlight(string flightId, [FromForm] DocumentUploadModel model)
-        //{
-        //    var flighExist = await _flightService.GetFlightByIdAsync(flightId);
-        //    if (flighExist == null)
-        //    {
-        //        return BadRequest("Cannot find that flight");
-        //    }
-        //    // valid date of flight 
-        //    if (flighExist.DepartureDateTime >= _timeService.GetCurrentTimeInVietnam())
-        //    {
-        //        return BadRequest("Cannot add document cause that flight is ending");
-        //    }
 
-        //    //test
-        //    var document = new Document
-        //    {
-        //        FileName = model.File.FileName,
-        //        FileType = model.File.ContentType,
-        //        // Other document properties
-        //        FlightId = flightId,
-        //        CreateBy = "TEST",
-        //        DocumentTypeId = 1,CreateDate = DateTime.Now
 
-        //    };
 
-        //    using (var memoryStream = new MemoryStream())
-        //    {
-        //        await model.File.CopyToAsync(memoryStream);
-        //        document.FileData = memoryStream.ToArray();
-        //    }
-        //    await _dbContext.Set<Document>().AddAsync(document);
-        //    await _dbContext.SaveChangesAsync(); // Save changes to get the DocumentType.Id
 
-        //    return Ok("Document added to flight successfully!");
 
-        //    //test
+        [HttpPost("{flightId}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> CreateDocumentForFlight(string flightId, [FromForm] DocumentUploadModel model, int documentTypeId)
+        {
+            var flighExist = await _flightService.GetFlightByIdAsync(flightId);
+            if (flighExist == null)
+            {
+                return BadRequest("Cannot find that flight");
+            }
+            // valid date of flight 
+            if (flighExist.DepartureDateTime >= _timeService.GetCurrentTimeInVietnam())
+            {
+                return BadRequest("Cannot add document cause that flight is ending");
+            }
 
-        //    return Ok(flighExist);
-        //}
+            // 
+            var documentType = await _documentTypeService.GetDocumentTypeByIdAsync(documentTypeId);
+            if (documentType == null)
+            {
+                return BadRequest("Cannot find that document type");
+            }
+
+            bool isCreated = await _documentService.CreateDocumentForFlight(flightId, model, documentTypeId);
+            if (isCreated == false)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Create Document Fail. Error server" });
+            }
+
+
+
+            return Ok();
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace FlightDocs.Service.FlightAPI.Service
 
         public async Task<FlightResponseDto?> GetFlightByIdAsync(string id)
         {
-            var flight = await _db.Fligh.Where(f => f.FlightId == id).FirstOrDefaultAsync();
+            var flight = await _db.Fligh.Where(f => f.FlightId == id ).FirstOrDefaultAsync();
             return _mapper.Map<FlightResponseDto>(flight);
         }
 

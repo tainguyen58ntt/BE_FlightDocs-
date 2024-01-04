@@ -1,5 +1,6 @@
 ﻿using FlightDocs.Serivce.AuthApi.Models.Dto;
 using FlightDocs.Serivce.AuthApi.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,44 +19,7 @@ namespace FlightDocs.Serivce.AuthApi.Controllers
 
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
-        {
-            // check valid email
-            var validateResult = await _authService.ValidateEmailAsync(model);
-
-
-            if (!validateResult.IsValid)
-            {
-                var errors = validateResult.Errors.Select(x => new { property = x.PropertyName, message = x.ErrorMessage });
-                return BadRequest(errors);
-            }
-
-            var errorMessage = await _authService.Register(model);
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                _response.Success = false;
-                _response.Message = errorMessage;
-                return BadRequest(_response);
-            }
-            //await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
-            return Ok(_response);
-        }
-
-
-        [HttpPost("AssignRole")]
-        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDto model)
-        {
-            var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.Role.ToUpper());
-            if (!assignRoleSuccessful)
-            {
-                _response.Success = false;
-                _response.Message = "Error encountered";
-                return BadRequest(_response);
-            }
-            return Ok(_response);
-
-        }
+   
 
 
         [HttpPost("login")]

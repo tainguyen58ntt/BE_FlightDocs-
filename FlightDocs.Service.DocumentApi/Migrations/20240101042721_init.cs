@@ -10,7 +10,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DocumentType",
+                name: "DocumentTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -22,7 +22,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DocumentType", x => x.Id);
+                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,9 +60,9 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                 {
                     table.PrimaryKey("PK_Documents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Documents_DocumentType_DocumentTypeId",
+                        name: "FK_Documents_DocumentTypes_DocumentTypeId",
                         column: x => x.DocumentTypeId,
-                        principalTable: "DocumentType",
+                        principalTable: "DocumentTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -81,9 +81,9 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                 {
                     table.PrimaryKey("PK_DocumentPermissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocumentPermissions_DocumentType_DocumentTypeId",
+                        name: "FK_DocumentPermissions_DocumentTypes_DocumentTypeId",
                         column: x => x.DocumentTypeId,
-                        principalTable: "DocumentType",
+                        principalTable: "DocumentTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -122,7 +122,7 @@ namespace FlightDocs.Service.DocumentApi.Migrations
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "DocumentType");
+                name: "DocumentTypes");
         }
     }
 }

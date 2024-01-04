@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Constraint\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

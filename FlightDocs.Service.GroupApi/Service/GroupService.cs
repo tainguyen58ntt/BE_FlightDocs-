@@ -95,8 +95,13 @@ namespace FlightDocs.Service.GroupApi.Service
             };
 
             //return result;
-
-            return _mapper.Map<Pagination<GroupResponseDto>>(result);
+            var rs =  _mapper.Map<Pagination<GroupResponseDto>>(result);
+            foreach(var item in rs.Items)
+            {
+                var count = item.ApplicationUserDtos.Count();
+                item.Members = count;
+            } 
+            return rs;
         }
     }
 

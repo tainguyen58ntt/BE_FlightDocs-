@@ -61,6 +61,8 @@ builder.Services.AddScoped<ITimeService, TimeService>();
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IDocumentPermissionService, DocumentPermissionService>();
+builder.Services.AddScoped<IDocumentTypeService, DocumentTypeService>();
 
 builder.Services.AddScoped<IFlightService, FlightSerivice>();
 
